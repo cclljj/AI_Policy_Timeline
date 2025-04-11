@@ -1,0 +1,19 @@
+#timeline {
+    width: 100%;
+    height: 600px;
+    border: 1px solid lightgray;
+}
+
+.type-a {
+    color: red;
+}
+
+.type-b {
+    color: blue;
+}
+
+.type-c {
+    color: green;
+}
+
+/* Add more styles for other types as needed */
