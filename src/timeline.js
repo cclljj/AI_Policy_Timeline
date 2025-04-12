@@ -19,7 +19,7 @@ async function fetchCSVData() {
     const uniqueItems = new Map();
 
     rows.forEach((row, index) => {
-        const [date, description, type, event] = row.split(',');
+        const [date, description, etype, event] = row.split(',');
         let uniqueId = date;
 
         // Ensure the id is unique by appending a counter if necessary
@@ -27,7 +27,27 @@ async function fetchCSVData() {
             uniqueId = `${date}-${index}`;
         }
 
-        uniqueItems.set(uniqueId, { id: uniqueId, start: date, content: event, detail: description });
+        uniqueItems.set(uniqueId, { id: uniqueId, start: date, content: `[${etype}] ${event}`, detail: description, etype: etype });
+    });
+    // find the unique/distinct etype in uniqueId
+    const uniqueEtypes = new Set();
+    uniqueItems.forEach(item => {
+        if (item.etype) {
+            uniqueEtypes.add(item.etype);
+        }
+    });
+    // create a dictionary with an increasing sequence number (starting from 0) mapping to each distinct uniqueItem
+    const etypeMap = {};
+    let sequenceNumber = 0;
+    uniqueEtypes.forEach(etype => {
+        etypeMap[etype] = sequenceNumber++;
+    });  
+
+    // For each event, assign a distinct background color based on its etype
+    const totalEtypes = uniqueEtypes.size;
+    uniqueItems.forEach(item => {
+        const color = `hsl(${etypeMap[item.etype] * (360 / totalEtypes)}, 70%, 80%)`;
+        item.style = `background-color: ${color};`;
     });
 
     return Array.from(uniqueItems.values());
@@ -67,7 +87,7 @@ async function initializeTimeline() {
     timeline.on('itemover', function (properties) {
         const item = dataSet.get(properties.item);
         if (item) {
-            tooltip.innerHTML = `${item.start}<br>${item.detail}`; // Updated to show "Date" and "Description"
+            tooltip.innerHTML = `${item.start}<br>[${item.etype}] ${item.content}<br>${item.detail}`; // Updated to show "Date" and "Description"
             tooltip.style.display = 'block';
         }
     });
