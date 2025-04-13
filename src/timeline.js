@@ -179,38 +179,40 @@ async function initializeTimeline() {
     // Add a title to the filter container
     const filterTitle = document.createElement('div');
     filterTitle.className = 'filter-title';
+    // Add filter section title
     filterTitle.textContent = 'Event Types';
     filterContainer.appendChild(filterTitle);
 
-    // Create checkboxes for each unique event type
-    const activeEtypes = new Set(uniqueEtypes); // Track active event types
-
+    // Create the filter UI and tracking mechanism
+    const activeEtypes = new Set(uniqueEtypes); // Track currently visible event types
+    
+    // Generate filter checkboxes for each event type
     uniqueEtypes.forEach(etype => {
+        // Create filter item with matching background color as the timeline item
         const filterItem = document.createElement('div');
         filterItem.className = 'filter-item';
-        // Apply the same background color as the event type
         filterItem.style.backgroundColor = etypeColorMap[etype];
         
+        // Create and configure checkbox for toggling event visibility
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.id = `filter-${etype}`;
-        checkbox.checked = true;
-
+        checkbox.checked = true; // All event types visible by default
+        
+        // Create label for the checkbox
         const label = document.createElement('label');
-        label.htmlFor = `filter-${etype}`;
+        label.htmlFor = checkbox.id;
         label.textContent = etype;
-
+        
+        // Add event listener to update timeline when filter changes
         checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-                activeEtypes.add(etype);
-            } else {
-                activeEtypes.delete(etype);
-            }
+            // Update the set of active event types
+            checkbox.checked ? activeEtypes.add(etype) : activeEtypes.delete(etype);
             updateTimeline();
         });
 
-        filterItem.appendChild(checkbox);
-        filterItem.appendChild(label);
+        // Add checkbox and label to the filter item
+        filterItem.append(checkbox, label);
         filterContainer.appendChild(filterItem);
     });
 
