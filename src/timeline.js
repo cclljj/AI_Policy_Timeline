@@ -19,7 +19,14 @@ async function fetchCSVData() {
     const uniqueItems = new Map();
 
     rows.forEach((row, index) => {
-        const [date, description, etype, event] = row.split(',');
+        // Skip empty rows
+        if (!row.trim()) return;
+        
+        // Use a proper CSV parsing approach for quoted fields
+        const columns = parseCSVRow(row);
+        if (columns.length < 4) return; // Skip malformed rows
+        
+        const [date, description, etype, event] = columns;
         let uniqueId = date;
 
         // Ensure the id is unique by appending a counter if necessary
@@ -29,6 +36,7 @@ async function fetchCSVData() {
 
         uniqueItems.set(uniqueId, { id: uniqueId, start: date, content: `[${etype}] ${event}`, detail: description, etype: etype });
     });
+    
     // find the unique/distinct etype in uniqueId
     const uniqueEtypes = new Set();
     uniqueItems.forEach(item => {
@@ -45,20 +53,174 @@ async function fetchCSVData() {
 
     // For each event, assign a distinct background color based on its etype
     const totalEtypes = uniqueEtypes.size;
+    const etypeColorMap = {}; // Create a map to store colors for each etype
     uniqueItems.forEach(item => {
-        const color = `hsl(${etypeMap[item.etype] * (360 / totalEtypes)}, 70%, 80%)`;
-        item.style = `background-color: ${color};`;
+        // Generate color if not already assigned to this etype
+        if (!etypeColorMap[item.etype]) {
+            etypeColorMap[item.etype] = `hsl(${etypeMap[item.etype] * (360 / totalEtypes)}, 70%, 80%)`;
+        }
+        item.style = `background-color: ${etypeColorMap[item.etype]};`;
     });
 
-    return Array.from(uniqueItems.values());
+    // Return both the items, unique event types, and the color map
+    return {
+        items: Array.from(uniqueItems.values()),
+        uniqueEtypes: Array.from(uniqueEtypes),
+        etypeColorMap
+    };
+}
+
+// Helper function to properly parse CSV rows, handling quoted fields
+function parseCSVRow(row) {
+    const result = [];
+    let currentField = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < row.length; i++) {
+        const char = row[i];
+        
+        if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            result.push(currentField);
+            currentField = '';
+        } else {
+            currentField += char;
+        }
+    }
+    
+    // Don't forget to add the last field
+    result.push(currentField);
+    return result;
 }
 
 // Initialize the timeline
 async function initializeTimeline() {
     const container = document.getElementById('timeline');
-    const items = await fetchCSVData();
+    if (!container) {
+        console.error('Timeline container not found!');
+        return;
+    }
 
+    // Create a wrapper for the entire layout
+    let layoutWrapper = document.getElementById('layout-wrapper');
+    if (!layoutWrapper) {
+        layoutWrapper = document.createElement('div');
+        layoutWrapper.id = 'layout-wrapper';
+        container.parentNode.insertBefore(layoutWrapper, container);
+        layoutWrapper.appendChild(container);
+        
+        // Add CSS for the layout
+        const layoutStyle = document.createElement('style');
+        layoutStyle.textContent = `
+            #layout-wrapper {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+            #filter-container {
+                min-width: 180px;
+                padding: 10px;
+                background-color: #f5f5f5;
+                border-right: 1px solid #ddd;
+                overflow-y: auto;
+                max-height: 100vh;
+            }
+            #timeline {
+                flex-grow: 1;
+                height: 100vh;
+                min-height: 500px;
+            }
+            .filter-item {
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                padding: 3px 5px;
+                border-radius: 4px;
+            }
+            .filter-item input {
+                margin-right: 8px;
+            }
+            .filter-title {
+                font-weight: bold;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #ccc;
+                padding-bottom: 5px;
+            }
+            @media (max-width: 768px) {
+                #layout-wrapper {
+                    flex-direction: column;
+                }
+                #filter-container {
+                    width: 100%;
+                    max-width: 100%;
+                    border-right: none;
+                    border-bottom: 1px solid #ddd;
+                    max-height: 200px;
+                }
+            }
+        `;
+        document.head.appendChild(layoutStyle);
+    }
+
+    // Create or get the filter container and add it to the layout wrapper
+    let filterContainer = document.getElementById('filter-container');
+    if (!filterContainer) {
+        filterContainer = document.createElement('div');
+        filterContainer.id = 'filter-container';
+        layoutWrapper.insertBefore(filterContainer, container);
+    }
+
+    const { items, uniqueEtypes, etypeColorMap } = await fetchCSVData();
     const dataSet = new DataSet(items);
+
+    // Add a title to the filter container
+    const filterTitle = document.createElement('div');
+    filterTitle.className = 'filter-title';
+    filterTitle.textContent = 'Event Types';
+    filterContainer.appendChild(filterTitle);
+
+    // Create checkboxes for each unique event type
+    const activeEtypes = new Set(uniqueEtypes); // Track active event types
+
+    uniqueEtypes.forEach(etype => {
+        const filterItem = document.createElement('div');
+        filterItem.className = 'filter-item';
+        // Apply the same background color as the event type
+        filterItem.style.backgroundColor = etypeColorMap[etype];
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `filter-${etype}`;
+        checkbox.checked = true;
+
+        const label = document.createElement('label');
+        label.htmlFor = `filter-${etype}`;
+        label.textContent = etype;
+
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                activeEtypes.add(etype);
+            } else {
+                activeEtypes.delete(etype);
+            }
+            updateTimeline();
+        });
+
+        filterItem.appendChild(checkbox);
+        filterItem.appendChild(label);
+        filterContainer.appendChild(filterItem);
+    });
+
+    // Function to update the timeline based on active event types
+    function updateTimeline() {
+        const filteredItems = items.filter(item => activeEtypes.has(item.etype));
+        dataSet.clear();
+        dataSet.add(filteredItems);
+    }
+
     // Update the timeline options to center on today's date and adjust the timeline scale to cover the first and next 6 months
     const options = {
         start: new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1), // Start 6 months before today
@@ -71,6 +233,11 @@ async function initializeTimeline() {
     };
 
     const timeline = new Timeline(container, dataSet, options);
+
+    // Add window resize event to handle responsive adjustments
+    window.addEventListener('resize', () => {
+        timeline.redraw();
+    });
 
     // Add a tooltip element to the document
     const tooltip = document.createElement('div');
@@ -87,7 +254,7 @@ async function initializeTimeline() {
     timeline.on('itemover', function (properties) {
         const item = dataSet.get(properties.item);
         if (item) {
-            tooltip.innerHTML = `${item.start}<br>[${item.etype}] ${item.content}<br>${item.detail}`; // Updated to show "Date" and "Description"
+            tooltip.innerHTML = `${item.start}<br>${item.content}<br>${item.detail}`; // Updated to show "Date" and "Description"
             tooltip.style.display = 'block';
         }
     });
@@ -102,5 +269,7 @@ async function initializeTimeline() {
     });
 }
 
-// Call the initialization function
-initializeTimeline();
+// Call the initialization function after the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initializeTimeline();
+});
