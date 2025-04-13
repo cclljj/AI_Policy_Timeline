@@ -117,9 +117,3 @@ This project is actively maintained. If you encounter any issues or have suggest
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
-
-## Contact
-
-Project Maintainer - [Your Name](mailto:your.email@example.com)
-
-Project Link: [https://github.com/yourusername/AS-ITS-Service-Timeline](https://github.com/yourusername/AS-ITS-Service-Timeline)
