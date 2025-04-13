@@ -229,7 +229,11 @@ async function initializeTimeline() {
         margin: {
             item: 10
         },
-        center: new Date() // Center the timeline on today's date
+        center: new Date(), // Center the timeline on today's date
+        orientation: {
+            axis: 'top',    // Place the axis at the top
+            item: 'top'     // Place items at the top
+        }
     };
 
     const timeline = new Timeline(container, dataSet, options);

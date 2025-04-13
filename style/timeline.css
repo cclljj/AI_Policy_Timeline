@@ -5,3 +5,17 @@
 }
 
 /* Add more styles for other types as needed */
+
+/* Adjust timeline for top orientation */
+.vis-timeline {
+  margin-top: 20px;  /* Add some space at the top */
+}
+
+.vis-top {
+  border-top: 1px solid #bfbfbf;
+}
+
+/* Enhance visibility of the axis labels */
+.vis-text.vis-major {
+  font-weight: bold;
+}
