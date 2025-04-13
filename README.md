@@ -46,7 +46,7 @@ AS-ITS-Service-Timeline/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/AS-ITS-Service-Timeline.git
+   git clone https://github.com/IISNRL/AS-ITS-Service-Timeline.git
    cd AS-ITS-Service-Timeline
    ```
 
@@ -70,18 +70,18 @@ AS-ITS-Service-Timeline/
 The `data/events.csv` file should follow this format:
 
 ```csv
-id,start,end,content,type,className
-1,2023-04-01,2023-04-03,System Maintenance,maintenance,maintenance-event
-2,2023-04-15,,Service Launch,milestone,milestone-event
+Date,Description,Type,Event
+2023-04-01,Scheduled maintenance for server updates,maintenance,System Maintenance
+2023-04-15,Initial release of the new ticketing system,milestone,Service Launch
+2023-05-10,Unexpected network failure affecting all campus buildings,incident,Network Outage
+2023-06-01,Deployment of version 2.1 with new features,update,Software Upgrade
 ```
 
 Fields:
-- `id`: Unique identifier for the event
-- `start`: Start date (YYYY-MM-DD) or datetime (YYYY-MM-DD HH:MM:SS)
-- `end`: End date/time (leave empty for point events)
-- `content`: Title/description of the event
-- `type`: Event category (maintenance, milestone, incident, etc.)
-- `className`: CSS class for custom styling
+- `Date`: Date of the event (YYYY-MM-DD)
+- `Description`: Detailed description of the event
+- `Type`: Event category (maintenance, milestone, incident, update, etc.)
+- `Event`: Short title of the event
 
 ### Customization
 
