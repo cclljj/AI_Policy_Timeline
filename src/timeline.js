@@ -12,11 +12,55 @@ document.head.insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="http
 
 // Fetch and parse the CSV data
 async function fetchCSVData() {
-    const response = await fetch('data/events.csv');
+    // Fetch data from both CSV files
+    const [event3Data, event4Data] = await Promise.all([
+        fetchAndProcessCSV('data/event3.csv'),
+        fetchAndProcessCSV('data/event4.csv')
+    ]);
+
+    // Combine data from both files
+    const combinedItems = [...event3Data.items, ...event4Data.items];
+
+    // Combine unique event types from both files
+    const uniqueEtypes = new Set([
+        ...event3Data.uniqueEtypes,
+        ...event4Data.uniqueEtypes
+    ]);
+    
+    // Create a dictionary with an increasing sequence number mapping to each distinct event type
+    const etypeMap = {};
+    let sequenceNumber = 0;
+    uniqueEtypes.forEach(etype => {
+        etypeMap[etype] = sequenceNumber++;
+    });  
+
+    // Generate consistent colors for each event type
+    const totalEtypes = uniqueEtypes.size;
+    const etypeColorMap = {}; 
+    combinedItems.forEach(item => {
+        // Generate color if not already assigned to this etype
+        if (!etypeColorMap[item.etype]) {
+            etypeColorMap[item.etype] = `hsl(${etypeMap[item.etype] * (360 / totalEtypes)}, 70%, 80%)`;
+        }
+        item.style = `background-color: ${etypeColorMap[item.etype]};`;
+    });
+
+    // Return the combined data
+    return {
+        items: combinedItems,
+        uniqueEtypes: Array.from(uniqueEtypes),
+        etypeColorMap
+    };
+}
+
+// Helper function to fetch and process a single CSV file
+async function fetchAndProcessCSV(csvFilePath) {
+    const response = await fetch(csvFilePath);
     const csvText = await response.text();
     const rows = csvText.split('\n').slice(1); // Skip the header row
 
     const uniqueItems = new Map();
+    const uniqueEtypes = new Set();
 
     rows.forEach((row, index) => {
         // Skip empty rows
@@ -27,46 +71,24 @@ async function fetchCSVData() {
         if (columns.length < 4) return; // Skip malformed rows
         
         const [date, description, etype, event] = columns;
-        let uniqueId = date;
+        let uniqueId = `${csvFilePath}-${date}-${index}`; // Use file path in ID to avoid conflicts between files
 
-        // Ensure the id is unique by appending a counter if necessary
-        while (uniqueItems.has(uniqueId)) {
-            uniqueId = `${date}-${index}`;
+        uniqueItems.set(uniqueId, { 
+            id: uniqueId, 
+            start: date, 
+            content: `[${etype}] ${event}`, 
+            detail: description, 
+            etype: etype 
+        });
+        
+        if (etype) {
+            uniqueEtypes.add(etype);
         }
-
-        uniqueItems.set(uniqueId, { id: uniqueId, start: date, content: `[${etype}] ${event}`, detail: description, etype: etype });
     });
     
-    // find the unique/distinct etype in uniqueId
-    const uniqueEtypes = new Set();
-    uniqueItems.forEach(item => {
-        if (item.etype) {
-            uniqueEtypes.add(item.etype);
-        }
-    });
-    // create a dictionary with an increasing sequence number (starting from 0) mapping to each distinct uniqueItem
-    const etypeMap = {};
-    let sequenceNumber = 0;
-    uniqueEtypes.forEach(etype => {
-        etypeMap[etype] = sequenceNumber++;
-    });  
-
-    // For each event, assign a distinct background color based on its etype
-    const totalEtypes = uniqueEtypes.size;
-    const etypeColorMap = {}; // Create a map to store colors for each etype
-    uniqueItems.forEach(item => {
-        // Generate color if not already assigned to this etype
-        if (!etypeColorMap[item.etype]) {
-            etypeColorMap[item.etype] = `hsl(${etypeMap[item.etype] * (360 / totalEtypes)}, 70%, 80%)`;
-        }
-        item.style = `background-color: ${etypeColorMap[item.etype]};`;
-    });
-
-    // Return both the items, unique event types, and the color map
     return {
         items: Array.from(uniqueItems.values()),
-        uniqueEtypes: Array.from(uniqueEtypes),
-        etypeColorMap
+        uniqueEtypes: Array.from(uniqueEtypes)
     };
 }
 
