@@ -13,18 +13,16 @@ document.head.insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="http
 // Fetch and parse the CSV data
 async function fetchCSVData() {
     // Fetch data from both CSV files
-    const [event3Data, event4Data] = await Promise.all([
-        fetchAndProcessCSV('data/event3.csv'),
-        fetchAndProcessCSV('data/event4.csv')
+    const [eventData] = await Promise.all([
+        fetchAndProcessCSV('data/events.csv')
     ]);
 
     // Combine data from both files
-    const combinedItems = [...event3Data.items, ...event4Data.items];
+    const combinedItems = [...eventData.items];
 
     // Combine unique event types from both files
     const uniqueEtypes = new Set([
-        ...event3Data.uniqueEtypes,
-        ...event4Data.uniqueEtypes
+        ...eventData.uniqueEtypes
     ]);
     
     // Create a dictionary with an increasing sequence number mapping to each distinct event type
