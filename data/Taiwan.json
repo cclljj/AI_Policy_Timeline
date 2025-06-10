@@ -1,0 +1,26 @@
+[
+  {
+    "Date": "January 2017",
+    "Event": "AI Grand Strategy for a Small Country",
+    "Description": "Taiwan's AI Grand Strategy for a Small Country, implemented from 2017 to 2021 with a budget of US$517.5 million, aimed to establish Taiwan as a key player in the global AI landscape. Leveraging its strengths in semiconductors and ICT, the strategy focused on building a robust AI ecosystem, establishing dedicated R&D centers, and enhancing AI infrastructure, particularly data centers. It emphasized improving AI chip-making capabilities and organized AI competitions to stimulate innovation. By targeting niche markets like the internet of things, security solutions, and driverless vehicles, Taiwan sought to drive economic growth and maintain competitiveness in the tech industry. The strategy's success laid the foundation for subsequent AI initiatives, fostering talent development and innovation hubs that positioned Taiwan as a leader in AI applications across sectors.",
+    "Type": "Taiwan"
+  },
+  {
+    "Date": "January 2018",
+    "Event": "AI Taiwan Action Plan 1.0",
+    "Description": "Launched on January 18, 2018, the AI Taiwan Action Plan 1.0 aimed to transform Taiwan into a smart nation by 2021. It focused on five components: developing AI talent (training over 10,000 technicians annually), leveraging Taiwan's semiconductor industry for AI computing, building an AI innovation hub, liberalizing laws (e.g., Unmanned Vehicles Technology Innovative Experimentation Act), and transforming industries with AI. The plan promoted deregulation, open access, and technology investment, driving innovation and digital transformation. It positioned Taiwan as a global leader in AI by fostering collaboration between government, industry, and academia, ensuring the nation remained competitive in the evolving tech landscape.",
+    "Type": "Taiwan"
+  },
+  {
+    "Date": "2023",
+    "Event": "AI Taiwan Action Plan 2.0",
+    "Description": "The AI Taiwan Action Plan 2.0, introduced in 2023, builds on the first plan, focusing on ethical standards and governance through 2026. It aims for comprehensive AI regulations by 2024, ensuring responsible development. The plan supports industry intelligentization, R&D in AI technologies, and infrastructure expansion, including supercomputers and AI models like YOLOv4. It strengthens Taiwan's global position by promoting ethical AI aligned with international standards. The Taiwan AI Academy and AI Foundation, established earlier, continue to nurture talent and foster collaboration. By balancing innovation with ethics, the plan positions Taiwan as a model for responsible AI development, maximizing benefits while mitigating risks.",
+    "Type": "Taiwan"
+  },
+  {
+    "Date": "2024",
+    "Event": "Draft AI Basic Act",
+    "Description": "The Draft AI Basic Act, introduced in late 2024 and under review as of June 2025, is a legislative effort to provide a legal foundation for AI development and governance. It defines AI comprehensively and sets principles like sustainability, privacy, and fairness, aligning with global standards (e.g., OECD, EU AI Act). The act adopts a risk-based approach, with the Ministry of Digital Affairs classifying risks and sector-specific regulators enforcing compliance. It emphasizes data privacy while promoting high-quality, non-sensitive data access for AI development. The legislation involves cross-agency collaboration and is designed to be adaptive, addressing AI's impact on areas like labor and the environment. Once enacted, it will be a cornerstone of Taiwan's AI policy, ensuring ethical and sustainable AI growth.",
+    "Type": "Taiwan"
+  }
+]

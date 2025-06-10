@@ -106,19 +106,65 @@ function cleanDateString(dateString) {
     return dateString;
 }
 
-// Fetch and parse the JSON data
+// Dynamically discover all JSON files in the data directory
+async function getDataFiles() {
+    console.log('Discovering JSON files in data/ folder...');
+    
+    // Common patterns for country/region/organization names
+    const patterns = [
+        'China', 'USA', 'Japan', 'Germany', 'France', 'UK', 'India', 'Korea', 'Singapore', 'Taiwan',
+    ];
+    
+    // Check which files exist
+    const checkPromises = patterns.map(async (pattern) => {
+        try {
+            const response = await fetch(`data/${pattern}.json`, { method: 'HEAD' });
+            return response.ok ? `${pattern}.json` : null;
+        } catch {
+            return null;
+        }
+    });
+    
+    const results = await Promise.all(checkPromises);
+    const foundFiles = results.filter(filename => filename !== null);
+    
+    console.log(`Found ${foundFiles.length} data files:`, foundFiles);
+    return foundFiles;
+}
+
+// Fetch and parse all JSON data files
 async function fetchData() {
     try {
-        const response = await fetch('data/data.json');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        const dataFiles = await getDataFiles();
         
-        // Process the JSON data
-        return processData(data);
+        if (dataFiles.length === 0) {
+            console.warn('No data files found!');
+            return { items: [], uniqueEtypes: [], etypeColorMap: {} };
+        }
+        
+        // Fetch all JSON files in parallel
+        const fetchPromises = dataFiles.map(async (filename) => {
+            try {
+                const response = await fetch(`data/${filename}`);
+                if (!response.ok) return [];
+                
+                const data = await response.json();
+                console.log(`Loaded ${filename}: ${data.length} items`);
+                return data;
+            } catch (error) {
+                console.warn(`Error loading ${filename}:`, error);
+                return [];
+            }
+        });
+        
+        const results = await Promise.all(fetchPromises);
+        const allData = results.flat().filter(item => item); // Flatten and filter out null/undefined
+        
+        console.log(`Total items loaded: ${allData.length}`);
+        return processData(allData);
+        
     } catch (error) {
-        console.error('Error fetching or processing data:', error);
+        console.error('Error fetching data:', error);
         return { items: [], uniqueEtypes: [], etypeColorMap: {} };
     }
 }

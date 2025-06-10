@@ -1,0 +1,38 @@
+[
+  {
+    "Date": "May 2017",
+    "Event": "Launch of AI Singapore",
+    "Description": "AI Singapore, launched in May 2017, is a national program to position Singapore as a global AI leader. It fosters collaboration among research institutions, start-ups, and companies to drive use-inspired AI research, knowledge creation, and tool development. Key initiatives include the 100E Programme, supporting companies in building AI products; the AI Apprenticeship Programme, developing local talent; LearnAI, offering educational resources for all ages; AI4SME, aiding small businesses; and Project SEA-LION, advancing multilingual AI. AI Singapore prioritizes ethical AI, researching fairness, accountability, and safety, with tools open-sourced under Apache 2.0. By building a robust AI ecosystem, it drives technological advancement and economic growth while ensuring responsible AI use, aligning with Singapore\u2019s vision of a trusted AI hub.",
+    "Type": "Singapore"
+  },
+  {
+    "Date": "January 2019",
+    "Event": "Release of Model AI Governance Framework",
+    "Description": "The Model AI Governance Framework, released in January 2019 by Singapore\u2019s PDPC and IMDA, is a voluntary guideline for ethical AI deployment. It covers internal governance, human involvement in AI decisions, operations management, and stakeholder communication, emphasizing transparency, fairness, and human-centricity. The second edition (January 2020) added tools like ISAGO, enhancing practical application. Flexible across industries, it aligns with global standards (e.g., EU, OECD), fostering trust in AI systems. By guiding organizations to adopt responsible practices, it strengthens Singapore\u2019s reputation as a leader in AI governance, balancing innovation with accountability.",
+    "Type": "Singapore"
+  },
+  {
+    "Date": "November 2019",
+    "Event": "Release of Singapore's First National AI Strategy",
+    "Description": "Singapore\u2019s National AI Strategy, launched in November 2019, aims to make Singapore a global AI leader by 2030. It focuses on scalable AI solutions in sectors like healthcare and logistics, with pillars including national AI projects (e.g., Intelligent Freight Planning), ecosystem enablers (training 25,000 professionals by 2025), and a human-centric approach. Updated as NAIS 2.0 in 2023, it emphasizes systems thinking and global collaboration. By addressing workforce adaptation and governance risks, the strategy drives economic growth, enhances public services, and ensures ethical AI use, positioning Singapore as a trusted AI hub.",
+    "Type": "Singapore"
+  },
+  {
+    "Date": "May 2022",
+    "Event": "Launch of AI Verify",
+    "Description": "AI Verify, launched on 25 May 2022 by IMDA and PDPC, is an AI governance testing framework assessing systems against 11 global principles, including fairness and accountability. Developed with AWS, Google, and Microsoft, it standardizes testing, offering actionable steps and evidence requirements. Open-sourced in June 2023 and updated for generative AI in May 2025, it aligns with frameworks like NIST\u2019s AI RMF. Targeting developers and auditors, AI Verify ensures responsible AI use, fostering trust. It supports Singapore\u2019s trusted AI ecosystem, setting a global benchmark for ethical AI governance.",
+    "Type": "Singapore"
+  },
+  {
+    "Date": "January 2024",
+    "Event": "Public Consultation on Draft Model AI Governance Framework for Generative AI",
+    "Description": "On 16 January 2024, IMDA and the AI Verify Foundation launched a public consultation on the Draft Model AI Governance Framework for Generative AI. Addressing challenges like misinformation, it proposes nine governance dimensions: accountability, data, trusted development, incident reporting, testing, security, content provenance, safety R&D, and public good. Building on existing AI policies, it balances innovation with responsibility. The consultation ensures stakeholder input for a practical, global framework. Once finalized, it will guide ethical generative AI deployment, reinforcing Singapore\u2019s leadership in AI governance.",
+    "Type": "Singapore"
+  },
+  {
+    "Date": "February 2025",
+    "Event": "Announcement of Enterprise Compute Initiative in Budget 2025",
+    "Description": "Announced on 18 February 2025 in Budget 2025, the Enterprise Compute Initiative allocates $150 million to support enterprises in adopting AI. Eligible businesses can partner with cloud providers for AI tools, computing power, and consultancy, enabling tailored solutions. Aligned with the National AI Strategy, it strengthens Singapore\u2019s AI ecosystem, particularly for SMEs, enhancing competitiveness and economic growth. By reducing adoption barriers, it drives business transformation. The initiative\u2019s success depends on enterprise engagement, but government support positions Singapore as an AI innovation hub.",
+    "Type": "Singapore"
+  }
+]

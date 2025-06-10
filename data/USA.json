@@ -1,0 +1,26 @@
+[
+  {
+    "Date": "January 2025",
+    "Event": "Executive Order: Removing Barriers to American Leadership in Artificial Intelligence",
+    "Description": "On January 23, 2025, an executive order titled 'Removing Barriers to American Leadership in Artificial Intelligence' was issued to bolster U.S. dominance in AI. This policy aims to eliminate regulatory obstacles that hinder AI innovation, emphasizing the development of AI systems free from ideological bias to promote human flourishing, economic competitiveness, and national security. It mandates the creation of an AI action plan within 180 days, involving key offices such as the Assistant to the President for Science and Technology and the Special Advisor for AI and Crypto. The order also requires an immediate review of actions under the previous Executive Order 14110 (October 2023) and directs the Office of Management and Budget (OMB) to revise specific memoranda within 60 days to align with this new policy. This executive action underscores a strategic shift toward deregulation, aiming to accelerate AI development while ensuring alignment with American values. It reflects the government's recognition of AI's critical role in maintaining economic and security advantages globally, though its long-term impact depends on the specifics of the action plan and subsequent implementations.",
+    "Type": "USA"
+  },
+  {
+    "Date": "January 2023",
+    "Event": "AI Risk Management Framework (RMF)",
+    "Description": "The National Institute of Standards and Technology (NIST) released the AI Risk Management Framework (RMF) on January 26, 2023, as a voluntary tool to manage risks associated with AI. This framework guides organizations in incorporating trustworthiness into AI design, development, use, and evaluation, addressing risks to individuals, organizations, and society. Developed through a transparent, consensus-driven process with public input, the RMF aligns with other AI risk management efforts. It includes companion resources like the AI RMF Playbook, Roadmap, and Crosswalk, and is supported by the Trustworthy and Responsible AI Resource Center, launched in March 2023. A Generative AI Profile, released in July 2024, addresses specific risks of generative AI technologies. The RMF is pivotal for promoting ethical AI practices, offering practical guidance for organizations to mitigate potential harms while fostering innovation. Its voluntary nature encourages broad adoption across sectors, making it a cornerstone of responsible AI governance in the U.S.",
+    "Type": "USA"
+  },
+  {
+    "Date": "May 2023",
+    "Event": "Establishment of Seven New National Artificial Intelligence Research Institutes",
+    "Description": "In May 2023, the National Science Foundation (NSF) announced a $140 million investment to establish seven new National Artificial Intelligence Research Institutes (AI Institutes). These institutes aim to advance fundamental AI research while addressing societal challenges in areas such as ethical AI, cybersecurity, climate change, brain science, and education. Each institute, funded up to $20 million over five years, involves collaborations among multiple universities to tackle large-scale, long-term AI challenges. This initiative aligns with the National Artificial Intelligence Research and Development Strategic Plan, emphasizing long-term investments in AI to maintain U.S. technical leadership. By fostering multidisciplinary teams, the institutes support the development of a diverse AI workforce and address critical issues like trustworthy AI systems and environmental sustainability. This policy underscores the government\u2019s commitment to strengthening AI research infrastructure, ensuring the U.S. remains competitive globally while addressing societal needs through innovative AI applications.",
+    "Type": "USA"
+  },
+  {
+    "Date": "December 2020",
+    "Event": "AI in Government Act of 2020",
+    "Description": "Enacted in December 2020 as part of the Consolidated Appropriations Act, 2021, the AI in Government Act established the AI Center of Excellence within the General Services Administration (GSA). This center provides guidance to federal agencies on responsible AI adoption, enhancing efficiency and public service delivery. The Act directed the Office of Management and Budget (OMB) to issue a memorandum outlining AI acquisition and application policies, identifying best practices for risk mitigation, and highlighting opportunities to improve agency operations and public services. It also required the Office of Personnel Management to submit a workforce development plan for AI within 120 days. This legislation institutionalizes AI governance within the federal government, ensuring ethical and effective AI use. By creating a centralized resource for AI expertise, the Act fosters a coordinated approach to AI integration, balancing innovation with accountability to maintain public trust.",
+    "Type": "USA"
+  }
+]

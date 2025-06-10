@@ -1,0 +1,20 @@
+[
+  {
+    "Date": "December 2017",
+    "Event": "Master Plan for Intelligent Information Society",
+    "Description": "In December 2017, South Korea launched the Master Plan for Intelligent Information Society to prepare for the Fourth Industrial Revolution. This plan focused on creating a national data management system, opening public data, and supporting AI research. It also introduced big data learning programs and emphasized data governance to balance innovation with privacy rights. This policy set the foundation for South Korea's future AI initiatives.",
+    "Type": "Korea"
+  },
+  {
+    "Date": "December 2019",
+    "Event": "National AI Strategy",
+    "Description": "Released in December 2019, the National AI Strategy aims to make South Korea a global AI leader. It focuses on building AI infrastructure, advancing technology, and developing a skilled workforce. The strategy also emphasizes ethical AI use, ensuring that AI development aligns with societal values and benefits the public.",
+    "Type": "Korea"
+  },
+  {
+    "Date": "January 2025",
+    "Event": "AI Basic Act",
+    "Description": "Promulgated in January 2025, the AI Basic Act is South Korea\u2019s first comprehensive AI law, effective from January 2026. It regulates high-impact AI systems, supports innovation, and establishes governance structures to ensure trustworthy AI. This act reflects South Korea's commitment to balancing AI advancement with ethical considerations and public trust.",
+    "Type": "Korea"
+  }
+]
