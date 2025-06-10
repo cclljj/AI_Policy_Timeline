@@ -10,7 +10,7 @@ View the live demonstration: [AS-ITS Service Timeline Demo](https://aws.cclljj.n
 
 ## Overview
 
-This application renders an interactive timeline visualization from event data stored in CSV format. Users can filter events by type and view detailed information about each event. The timeline uses color-coding to distinguish between different event categories, providing an intuitive visual representation of service history.
+This application renders an interactive timeline visualization from event data stored in JSON format. Users can filter events by type and view detailed information about each event. The timeline uses color-coding to distinguish between different event categories, providing an intuitive visual representation of service history.
 
 ## Features
 
@@ -19,7 +19,7 @@ This application renders an interactive timeline visualization from event data s
 - **Color-Coded Categories**: Quickly identify event types through visual indicators
 - **Responsive Design**: Optimized for desktop, tablet, and mobile displays
 - **Event Details**: Access comprehensive information by hovering or clicking events
-- **Data-Driven**: Easily update by modifying the CSV data source
+- **Data-Driven**: Easily update by modifying the JSON data source
 
 ## Project Structure
 
@@ -31,7 +31,7 @@ AS-ITS-Service-Timeline/
 ├── style/
 │   └── timeline.css     # Timeline styling and responsive design rules
 ├── data/
-│   └── events.csv       # Event data in CSV format
+│   └── data.json        # Event data in JSON format
 └── README.md            # Project documentation
 ```
 
@@ -67,21 +67,25 @@ AS-ITS-Service-Timeline/
 
 ### Event Data Format
 
-The `data/events.csv` file should follow this format:
+The `data/data.json` file should follow this format:
 
-```csv
-Date,Description,Type,Event
-2023-04-01,Scheduled maintenance for server updates,maintenance,System Maintenance
-2023-04-15,Initial release of the new ticketing system,milestone,Service Launch
-2023-05-10,Unexpected network failure affecting all campus buildings,incident,Network Outage
-2023-06-01,Deployment of version 2.1 with new features,update,Software Upgrade
+```json
+[
+  {
+    "Date": "January 2023",
+    "Event": "Event Title",
+    "Description": "Detailed description of the event",
+    "Type": "Category"
+  },
+  // More events...
+]
 ```
 
 Fields:
-- `Date`: Date of the event (YYYY-MM-DD)
-- `Description`: Detailed description of the event
-- `Type`: Event category (maintenance, milestone, incident, update, etc.)
+- `Date`: Date of the event (e.g., "January 2023")
 - `Event`: Short title of the event
+- `Description`: Detailed description of the event
+- `Type`: Event category (e.g., "USA", "EU", "International")
 
 ### Customization
 

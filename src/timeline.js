@@ -1,82 +1,157 @@
-// Update the import statement to use the global `vis` object provided by the CDN
-// Remove the incorrect import
-// import { DataSet, Timeline } from 'vis-timeline/standalone';
-
 // Use the global `vis` object instead
 const { DataSet, Timeline } = vis;
-// Remove the local CSS import and use a CDN instead
-// import '../node_modules/vis-timeline/styles/vis-timeline-graph2d.min.css';
 
 // Add a link to the CDN-hosted CSS file dynamically
 document.head.insertAdjacentHTML('beforeend', '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-timeline/7.7.0/vis-timeline-graph2d.min.css" />');
 
-// Fetch and parse the CSV data
-async function fetchCSVData() {
-    // Fetch data from both CSV files
-    const [eventData] = await Promise.all([
-        fetchAndProcessCSV('data/events.csv')
-    ]);
-
-    // Combine data from both files
-    const combinedItems = [...eventData.items];
-
-    // Combine unique event types from both files
-    const uniqueEtypes = new Set([
-        ...eventData.uniqueEtypes
-    ]);
+// Enhanced function to parse flexible date formats
+function parseFlexibleDate(dateString) {
+    if (!dateString) {
+        console.warn("Empty date string provided");
+        return new Date();
+    }
     
-    // Create a dictionary with an increasing sequence number mapping to each distinct event type
-    const etypeMap = {};
-    let sequenceNumber = 0;
-    uniqueEtypes.forEach(etype => {
-        etypeMap[etype] = sequenceNumber++;
-    });  
-
-    // Generate consistent colors for each event type
-    const totalEtypes = uniqueEtypes.size;
-    const etypeColorMap = {}; 
-    combinedItems.forEach(item => {
-        // Generate color if not already assigned to this etype
-        if (!etypeColorMap[item.etype]) {
-            etypeColorMap[item.etype] = `hsl(${etypeMap[item.etype] * (360 / totalEtypes)}, 70%, 80%)`;
+    // Try to parse exact dates first (YYYY-MM-DD)
+    const exactDateMatch = /^\d{4}-\d{1,2}-\d{1,2}$/.test(dateString);
+    if (exactDateMatch) {
+        return new Date(dateString);
+    }
+    
+    // Try to parse specific dates with custom format (e.g., "September 21, 2021")
+    const specificDateRegex = /^([a-zA-Z]+)\s+(\d{1,2})(?:,|)\s+(\d{4})$/;
+    const specificDateMatch = dateString.match(specificDateRegex);
+    if (specificDateMatch) {
+        const month = specificDateMatch[1];
+        const day = parseInt(specificDateMatch[2]);
+        const year = parseInt(specificDateMatch[3]);
+        
+        const monthMap = getMonthMap();
+        const monthIndex = monthMap[month.toLowerCase()];
+        
+        if (monthIndex !== undefined) {
+            return new Date(year, monthIndex, day);
         }
-        item.style = `background-color: ${etypeColorMap[item.etype]};`;
-    });
+    }
+    
+    // Try to parse month and year (e.g., "January 2023", "Jan 2023")
+    const monthYearRegex = /^([a-zA-Z]+)\s+(\d{4})$/;
+    const monthYearMatch = dateString.match(monthYearRegex);
+    if (monthYearMatch) {
+        const month = monthYearMatch[1];
+        const year = parseInt(monthYearMatch[2]);
+        
+        const monthMap = getMonthMap();
+        const monthIndex = monthMap[month.toLowerCase()];
+        
+        if (monthIndex !== undefined) {
+            return new Date(year, monthIndex, 1);
+        }
+    }
+    
+    // Try to parse just the year (e.g., "2023")
+    const yearRegex = /^(\d{4})$/;
+    const yearMatch = dateString.match(yearRegex);
+    if (yearMatch) {
+        return new Date(parseInt(yearMatch[1]), 0, 1); // January 1st of the year
+    }
+    
+    // Try to parse date ranges and use the first date (e.g., "2017-2021")
+    const dateRangeRegex = /^(\d{4})[^\d]*(\d{4})$/;
+    const dateRangeMatch = dateString.match(dateRangeRegex);
+    if (dateRangeMatch) {
+        const startYear = parseInt(dateRangeMatch[1]);
+        return new Date(startYear, 0, 1); // January 1st of the start year
+    }
+    
+    // For dates that couldn't be parsed, log a warning and default to current date
+    console.warn(`Could not parse date: "${dateString}", using current date as fallback`);
+    return new Date();
+}
 
-    // Return the combined data
+// Helper function for month name mapping
+function getMonthMap() {
     return {
-        items: combinedItems,
-        uniqueEtypes: Array.from(uniqueEtypes),
-        etypeColorMap
+        "january": 0, "jan": 0,
+        "february": 1, "feb": 1,
+        "march": 2, "mar": 2,
+        "april": 3, "apr": 3,
+        "may": 4,
+        "june": 5, "jun": 5,
+        "july": 6, "jul": 6,
+        "august": 7, "aug": 7,
+        "september": 8, "sep": 8, "sept": 8,
+        "october": 9, "oct": 9,
+        "november": 10, "nov": 10,
+        "december": 11, "dec": 11
     };
 }
 
-// Helper function to fetch and process a single CSV file
-async function fetchAndProcessCSV(csvFilePath) {
-    const response = await fetch(csvFilePath);
-    const csvText = await response.text();
-    const rows = csvText.split('\n').slice(1); // Skip the header row
+// Function to normalize and clean date strings before parsing
+function cleanDateString(dateString) {
+    if (!dateString) return "";
+    
+    // Convert to string if not already
+    dateString = String(dateString);
+    
+    // Trim whitespace
+    dateString = dateString.trim();
+    
+    // Handle special cases
+    if (dateString.toLowerCase() === "2023") return "2023";
+    if (dateString.toLowerCase() === "2018") return "2018";
+    if (dateString.toLowerCase() === "2019") return "2019";
+    if (dateString.toLowerCase() === "2020") return "2020";
+    if (dateString.toLowerCase() === "2024") return "2024";
+    
+    return dateString;
+}
 
-    const uniqueItems = new Map();
+// Fetch and parse the JSON data
+async function fetchData() {
+    try {
+        const response = await fetch('data/data.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        // Process the JSON data
+        return processData(data);
+    } catch (error) {
+        console.error('Error fetching or processing data:', error);
+        return { items: [], uniqueEtypes: [], etypeColorMap: {} };
+    }
+}
+
+// Process the JSON data into the required format
+function processData(data) {
+    const items = [];
     const uniqueEtypes = new Set();
-
-    rows.forEach((row, index) => {
-        // Skip empty rows
-        if (!row.trim()) return;
+    
+    // Process each event in the JSON data - adjust for new format
+    data.forEach((event, index) => {
+        const dateString = cleanDateString(event.Date);
+        const description = event.Description;
+        const etype = event.Type;
+        const title = event.Event;
+        const uniqueId = `event-${index}`;
         
-        // Use a proper CSV parsing approach for quoted fields
-        const columns = parseCSVRow(row);
-        if (columns.length < 4) return; // Skip malformed rows
+        // Parse the date using our enhanced flexible date parser
+        const parsedDate = parseFlexibleDate(dateString);
         
-        const [date, description, etype, event] = columns;
-        let uniqueId = `${csvFilePath}-${date}-${index}`; // Use file path in ID to avoid conflicts between files
-
-        uniqueItems.set(uniqueId, { 
-            id: uniqueId, 
-            start: date, 
-            content: `[${etype}] ${event}`, 
-            detail: description, 
-            etype: etype 
+        // Log parsing issues for debugging
+        if (isNaN(parsedDate.getTime())) {
+            console.error(`Failed to parse date for item ${index}: "${dateString}"`);
+        }
+        
+        items.push({
+            id: uniqueId,
+            start: parsedDate,
+            content: `[${etype}] ${title}`,
+            detail: description,
+            etype: etype,
+            // Store original date string for display in tooltips
+            originalDate: dateString
         });
         
         if (etype) {
@@ -84,34 +159,28 @@ async function fetchAndProcessCSV(csvFilePath) {
         }
     });
     
+    // Sort items by date
+    items.sort((a, b) => a.start - b.start);
+    
+    // Generate consistent colors for each event type
+    const etypeArray = Array.from(uniqueEtypes);
+    const totalEtypes = etypeArray.length;
+    const etypeColorMap = {};
+    
+    etypeArray.forEach((etype, index) => {
+        etypeColorMap[etype] = `hsl(${index * (360 / totalEtypes)}, 70%, 80%)`;
+    });
+    
+    // Apply colors to items
+    items.forEach(item => {
+        item.style = `background-color: ${etypeColorMap[item.etype]};`;
+    });
+    
     return {
-        items: Array.from(uniqueItems.values()),
-        uniqueEtypes: Array.from(uniqueEtypes)
+        items,
+        uniqueEtypes: etypeArray,
+        etypeColorMap
     };
-}
-
-// Helper function to properly parse CSV rows, handling quoted fields
-function parseCSVRow(row) {
-    const result = [];
-    let currentField = '';
-    let inQuotes = false;
-    
-    for (let i = 0; i < row.length; i++) {
-        const char = row[i];
-        
-        if (char === '"') {
-            inQuotes = !inQuotes;
-        } else if (char === ',' && !inQuotes) {
-            result.push(currentField);
-            currentField = '';
-        } else {
-            currentField += char;
-        }
-    }
-    
-    // Don't forget to add the last field
-    result.push(currentField);
-    return result;
 }
 
 // Initialize the timeline
@@ -193,7 +262,7 @@ async function initializeTimeline() {
         layoutWrapper.insertBefore(filterContainer, container);
     }
 
-    const { items, uniqueEtypes, etypeColorMap } = await fetchCSVData();
+    const { items, uniqueEtypes, etypeColorMap } = await fetchData();
     const dataSet = new DataSet(items);
 
     // Add a title to the filter container
@@ -243,15 +312,32 @@ async function initializeTimeline() {
         dataSet.add(filteredItems);
     }
 
-    // Update the timeline options to center on today's date and adjust the timeline scale to cover the first and next 6 months
+    // Determine the date range for the timeline based on available data
+    let minDate = new Date();
+    let maxDate = new Date();
+    
+    if (items.length > 0) {
+        // Find earliest and latest dates
+        minDate = new Date(Math.min(...items.map(item => item.start.getTime())));
+        maxDate = new Date(Math.max(...items.map(item => item.start.getTime())));
+        
+        // Add some padding to the timeline (6 months before and after)
+        minDate = new Date(minDate.getFullYear(), minDate.getMonth() - 6, 1);
+        maxDate = new Date(maxDate.getFullYear(), maxDate.getMonth() + 6, 1);
+    } else {
+        // Default to a year range around current date if no items
+        minDate = new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1);
+        maxDate = new Date(new Date().getFullYear(), new Date().getMonth() + 6, 1);
+    }
+
+    // Update the timeline options with the calculated date range
     const options = {
-        start: new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1), // Start 6 months before today
-        end: new Date(new Date().getFullYear(), new Date().getMonth() + 6, 1),   // End 6 months after today
+        start: minDate,
+        end: maxDate,
         editable: false,
         margin: {
             item: 10
         },
-        center: new Date(), // Center the timeline on today's date
         orientation: {
             axis: 'top',    // Place the axis at the top
             item: 'top'     // Place items at the top
@@ -280,7 +366,7 @@ async function initializeTimeline() {
     timeline.on('itemover', function (properties) {
         const item = dataSet.get(properties.item);
         if (item) {
-            tooltip.innerHTML = `${item.start}<br>${item.content}<br>${item.detail}`; // Updated to show "Date" and "Description"
+            tooltip.innerHTML = `${item.originalDate}<br>${item.content}<br>${item.detail}`;
             tooltip.style.display = 'block';
         }
     });
