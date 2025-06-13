@@ -414,11 +414,49 @@ async function initializeTimeline() {
         if (item) {
             tooltip.innerHTML = `${item.originalDate}<br>${item.content}<br>${item.detail}`;
             tooltip.style.display = 'block';
+            
+            // Highlight the item by setting selection (this will trigger vis-timeline's built-in highlighting)
+            timeline.setSelection([properties.item]);
+            
+            // Apply hover class with improved targeting
+            const timelineContainer = document.querySelector('#timeline');
+            if (timelineContainer) {
+                // Method 1: Target by selection class
+                setTimeout(() => {
+                    const selectedItems = timelineContainer.querySelectorAll('.vis-item.vis-selected');
+                    selectedItems.forEach(el => {
+                        el.classList.add('vis-hover');
+                    });
+                }, 20);
+                
+                // Method 2: Find by matching data attributes or position
+                setTimeout(() => {
+                    const allItems = timelineContainer.querySelectorAll('.vis-item');
+                    allItems.forEach(el => {
+                        // Check if this element corresponds to our hovered item
+                        if (el.classList.contains('vis-selected')) {
+                            el.classList.add('vis-hover');
+                        }
+                    });
+                }, 30);
+            }
         }
     });
 
-    timeline.on('itemout', function () {
+    timeline.on('itemout', function (properties) {
         tooltip.style.display = 'none';
+        
+        // Clear selection to remove vis-timeline's built-in highlighting
+        timeline.setSelection([]);
+        
+        // Remove our custom hover class
+        const timelineContainer = document.querySelector('#timeline');
+        if (timelineContainer) {
+            const allItems = timelineContainer.querySelectorAll('.vis-item.vis-hover');
+            allItems.forEach(el => {
+                el.classList.remove('vis-hover');
+            });
+        }
     });
 
     document.addEventListener('mousemove', function (event) {

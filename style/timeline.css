@@ -19,3 +19,90 @@
 .vis-text.vis-major {
   font-weight: bold;
 }
+
+/* Hover effect for timeline item connections */
+.vis-item.vis-hover {
+  z-index: 999 !important;
+}
+
+/* Highlight the item content with red border on hover */
+.vis-item.vis-hover .vis-item-content {
+  border-color: #ff0000 !important;
+  border-width: 2px !important;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5) !important;
+}
+
+/* Target vis-timeline's connector lines - comprehensive selectors */
+.vis-item.vis-hover .vis-item-line,
+.vis-item.vis-hover .vis-line,
+.vis-item.vis-hover .vis-item-vertical-line {
+  background-color: #ff0000 !important;
+  border-color: #ff0000 !important;
+  border-left-color: #ff0000 !important;
+  border-right-color: #ff0000 !important;
+  border-top-color: #ff0000 !important;
+  border-bottom-color: #ff0000 !important;
+  stroke: #ff0000 !important;
+  stroke-width: 2px !important;
+}
+
+/* For items with bottom orientation */
+.vis-item.vis-hover .vis-item-line-bottom {
+  border-top-color: #ff0000 !important;
+  background-color: #ff0000 !important;
+}
+
+/* For items with top orientation */
+.vis-item.vis-hover .vis-item-line-top {
+  border-bottom-color: #ff0000 !important;
+  background-color: #ff0000 !important;
+}
+
+/* Override vis-timeline's default selected item styling to use red borders only */
+.vis-item.vis-selected.vis-hover {
+  border-color: #ff0000 !important;
+  /* Don't change background - let it keep original color */
+}
+
+.vis-item.vis-selected.vis-hover .vis-item-content {
+  border-color: #ff0000 !important;
+  /* Don't change background - let it keep original color */
+}
+
+/* Target only connector elements, not content areas */
+#timeline .vis-item.vis-hover .vis-item-line,
+#timeline .vis-item.vis-hover .vis-line,
+#timeline .vis-item.vis-hover .vis-item-vertical-line,
+#timeline .vis-item.vis-hover::before,
+#timeline .vis-item.vis-hover::after {
+  border-color: #ff0000 !important;
+  background-color: #ff0000 !important;
+}
+
+/* Preserve content background and only change border */
+#timeline .vis-item.vis-hover .vis-item-content {
+  border-color: #ff0000 !important;
+  /* Keep original background - don't override it */
+}
+
+/* Target SVG connector lines if used */
+.vis-item.vis-hover svg line,
+.vis-item.vis-hover line,
+.vis-item.vis-hover path {
+  stroke: #ff0000 !important;
+  stroke-width: 2px !important;
+  fill: #ff0000 !important;
+}
+
+/* Additional selectors for different vis-timeline versions - connectors only */
+.vis-item.vis-hover .vis-item-overflow,
+.vis-item.vis-hover .vis-dot {
+  background-color: #ff0000 !important;
+  border-color: #ff0000 !important;
+}
+
+/* Points should be red but preserve item content backgrounds */
+.vis-item.vis-hover .vis-point {
+  background-color: #ff0000 !important;
+  border-color: #ff0000 !important;
+}
