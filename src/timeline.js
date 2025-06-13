@@ -248,25 +248,18 @@ async function initializeTimeline() {
         // Add CSS for the layout
         const layoutStyle = document.createElement('style');
         layoutStyle.textContent = `
-            #layout-wrapper {
-                display: flex;
-                flex-direction: row;
-                width: 100%;
-                max-width: 100%;
-                overflow-x: hidden;
-            }
             #filter-container {
                 min-width: 180px;
                 padding: 10px;
                 background-color: #f5f5f5;
                 border-right: 1px solid #ddd;
                 overflow-y: auto;
-                max-height: 100vh;
+                flex-shrink: 0;
             }
             #timeline {
                 flex-grow: 1;
-                height: 100vh;
-                min-height: 500px;
+                height: 100%;
+                min-height: 0;
             }
             .filter-item {
                 margin-bottom: 8px;
@@ -286,14 +279,19 @@ async function initializeTimeline() {
             }
             @media (max-width: 768px) {
                 #layout-wrapper {
-                    flex-direction: column;
+                    flex-direction: column !important;
                 }
                 #filter-container {
                     width: 100%;
                     max-width: 100%;
                     border-right: none;
                     border-bottom: 1px solid #ddd;
-                    max-height: 200px;
+                    max-height: 150px;
+                    flex-shrink: 0;
+                }
+                #timeline {
+                    flex: 1;
+                    min-height: 0;
                 }
             }
         `;
